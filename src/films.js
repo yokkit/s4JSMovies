@@ -14,31 +14,30 @@ function getMoviesFromDirector(array, director) {
 }
 
 // Exercise 3: Calculate the average of the films of a given director.
-
 function calcAverageScore(array){
   let result;
-  const scores = array.map((movie)=>movie.score);
-  // exclude which does not have scores
-  const isScore = scores.filter((score)=>score);
   // calculate sum of the scores
-  const scoreSum = isScore.reduce((previousScores, score)=> previousScores + score);
-  if (!isScore.length){
+  const scoreSum = array.reduce((previousScores, score)=> previousScores + score);
+  if (!array.length){
     // avoid zero division error
     result = 0;
   } else {
     // calculate the average score
-    result = parseFloat((scoreSum/isScore.length).toFixed(2));
+    result = parseFloat((scoreSum/array.length).toFixed(2));
   }
   return result;
 }
 
 function moviesAverageOfDirector(array, director) {
   const moviesSelected = getMoviesFromDirector(array, director);
-  const result = calcAverageScore(moviesSelected);
+  const scores = moviesSelected.map((movie)=>movie.score);
+  const result = calcAverageScore(scores);
   console.log("EXERCICE 3 ->", result);
   return result
 }
 
+
+// Exercise 4:  Alphabetic order by title 
 function orderAscendingFunc(item1, item2){
   if (item1 < item2) {
     return -1
@@ -81,11 +80,18 @@ function orderByYear(array) {
   return result;
 }
 
-// Exercise 6: Calculate the average of the movies in a category
-function moviesAverageByCategory(array, category) {
-  const categoryArray = array.filter((movie)=> movie.genre.includes(category));
-  const result = calcAverageScore(categoryArray);
-
+// // Exercise 6: Calculate the average of the movies in a category
+function moviesAverageByCategory(array, category="") {
+  let scores;
+  let newArray = [...array];
+  if(category){
+    newArray = newArray.filter((movie)=> movie.genre.includes(category));
+  } 
+  scores = newArray.map((movie)=>movie.score);
+  // exclude what do not have scores
+  scores = scores.filter((score)=>score);
+  // calculate the average score
+  const result = calcAverageScore(scores);
   console.log("EXERCICE 6 ->", result);
   return result;
 }
@@ -93,17 +99,22 @@ function moviesAverageByCategory(array, category) {
 // Exercise 7: Modify the duration of movies to minutes
 
 function calculateToMinutes(timeHours){
-  // Convert the string to time array e.g. '2h 20min' to ['2', '20'] 
   let timeArray=[];
-  if (timeHours.slice(-1)==='n'){
-    timeHours = timeHours.slice(0, -3);
+  const isHours = timeHours.indexOf("h");
+  const isMins = timeHours.indexOf("m");
+  // Convert the string to time array e.g. '2h 20min' to ['2', '20'] 
+  if(isHours!==-1 && isMins!==-1){
+    timeHours = timeHours.slice(0, isMins);
     timeArray = timeHours.split('h ');
-  } else {
+  } else if (isHours!==-1){
     // In case of no having minutes. e.g. '2h' to ["2", "0"] 
-    timeArray = [timeHours.slice(0, -1)];
+    timeArray = [timeHours.slice(0, isHours)];
     timeArray.push('0');
+  } else {
+    // In case of no having hours. e.g. '45min' to ["0", "45"]
+    timeArray = ["0"];
+    timeArray.push(timeHours.slice(0, isMins)); 
   }
-
   // calculate minutes
   let totalMinutes = parseInt(timeArray[0])*60 + parseInt(timeArray[1]);
   return totalMinutes;
@@ -111,8 +122,6 @@ function calculateToMinutes(timeHours){
 
 function hoursToMinutes(array) {
   const newArray = array.map((movie)=>Object.assign({}, movie));
-
-  console.log("newArray", newArray[0]);
   const result = newArray.map((movie)=>{
     if(movie.duration){
     // execute the convertToMinutes func, and assign to the movie duration
@@ -122,14 +131,11 @@ function hoursToMinutes(array) {
     // returning the object
     return movie;
   })
-
-  console.log("original array", array[0]);
-
-  console.log("EXERCICE 7 ->", result[0]);
+  console.log("EXERCICE 7 ->", result);
   return result;
 }
 
-// Exercise 8: Get the best film of a year
+// // Exercise 8: Get the best film of a year
 function getMoviesFromYear(array, year) {
   const result = array.filter((movie)=> movie.year === year);
   return result;
@@ -147,8 +153,6 @@ function bestFilmOfYear(array, year) {
   console.log("EXERCICE 8 ->", result);
   return result
 }
-
-
 
 
 // The following is required to make unit tests work.
