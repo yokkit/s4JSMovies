@@ -4,5 +4,5 @@ node_modules
 package-lock.json
 yarn.lock
 *.log
-test-results.html
+# test-results.html
 bundle.js
