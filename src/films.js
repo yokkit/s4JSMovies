@@ -5,7 +5,6 @@ function getAllDirectors(array) {
   return result;
 }
 
-
 // Exercise 2: Get the films of a certain director
 function getMoviesFromDirector(array, director) {
   const result = array.filter((movie)=> movie.director === director);
@@ -97,7 +96,6 @@ function moviesAverageByCategory(array, category="") {
 }
 
 // Exercise 7: Modify the duration of movies to minutes
-
 function calculateToMinutes(timeHours){
   let timeArray=[];
   const isHours = timeHours.indexOf("h");
